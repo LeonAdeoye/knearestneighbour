@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
 
 
 def read_data():
@@ -37,8 +38,11 @@ def read_data():
     print(f"Shape of y_train: {y_train.shape}")
     print(f"Shape of y_test: {y_test.shape}")
 
-    knn = KNeighborsClassifier(n_neighbors=5)
-
+    knn_model = KNeighborsClassifier(n_neighbors=5)
+    knn_model.fit(X_train, y_train)
+    y_prediction = knn_model.predict(X_test)
+    print(f"Prediction: {y_prediction}")
+    print("Accuracy: ", metrics.accuracy_score(y_test, y_prediction))
 
 def normalize(df):
     df_scaled = df.copy()
