@@ -9,25 +9,22 @@ def read_data():
     print(f'Reading CSV file: wdbc.data into dataframe with Panda {pd.__version__}')
     # read a CSV file with a comma as a delimiter, assume no header, and skip the first column
     bc_dataFrame = pd.read_csv("../data/wdbc.data", sep=',', header=None, usecols=list(range(1, 32)))
-    print(f"Head of data frame:\n{bc_dataFrame.head()}")
+    print(f"Head after read:\n{bc_dataFrame.head()}")
 
-    normalized = normalize(bc_dataFrame[1:])
-    print(f"First row after normalization:\n {normalized}")
+    normalized = normalize(bc_dataFrame)
+    print(f"Head after normalization:\n {normalized.head()}")
+
+    print(f"Head of correlation:\n {normalized.corr().head()}")
 
     X = normalized.iloc[:, 1:]
     y = normalized.iloc[:, :1]
-    print(f"X:\n {X}")
-    print(f"y:\n {y}")
-
-    print(f"Correlation of diagnosis:\n {normalized.corr()}")
+    print(f"X:\n {X.head()}")
+    print(f"y:\n {y.head()}")
 
     # group by diagnosis - this returns groupby object.
     diagnosis_groupby = normalized.groupby(by=[1])
     print(f"Count of diagnosis:\n {diagnosis_groupby.size()}")
 
-    normalized[1].hist(bins=2)
-
-    plt.show()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=23122012, stratify=y)
 
     print(f"After train test split, head of X_train:\n{X_train.head()}")
@@ -40,11 +37,16 @@ def read_data():
     print(f"Shape of y_train: {y_train.shape}")
     print(f"Shape of y_test: {y_test.shape}")
 
-    knn_model = KNeighborsClassifier(n_neighbors=23)
+    knn_model = KNeighborsClassifier(n_neighbors=21)
     knn_model.fit(X_train, y_train.values.ravel())
     y_prediction = knn_model.predict(X_test)
     print(f"Prediction: {y_prediction}")
     print("Accuracy: ", metrics.accuracy_score(y_test, y_prediction))
+
+    pd.crosstab(y_test, y_prediction[:])
+
+    normalized[1].hist(bins=2)
+    plt.show()
 
 def normalize(df):
     df_scaled = df.copy()
