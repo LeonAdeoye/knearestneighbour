@@ -1,8 +1,11 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
+from sklearn.metrics import mean_squared_error
+from math import sqrt
 
 
 def read_data():
@@ -47,13 +50,14 @@ def read_data():
     print(f"Shape of y_test: {y_test.shape}")
 
     # Configure the KNN model using a k value of 21
-    knn_model = KNeighborsClassifier(n_neighbors=21)
+    knn_model = KNeighborsClassifier(n_neighbors=15)
     # Fit the training data to the model
     knn_model.fit(X_train, y_train.values.ravel())
     # Using the test data, use the model to make the predictions
     y_prediction = knn_model.predict(X_test)
-    # Display the predictions
+    # Display arrays of the predictions and test results
     print(f"Prediction: {y_prediction}")
+    print(f"Convert dataframe of one column to array of items: {y_test.values.ravel()}")
     # Calculate the accuracy of the data by comparing the known
     # result of the test data with the predicted results of the test data
     print("Accuracy: ", metrics.accuracy_score(y_test, y_prediction))
@@ -65,6 +69,25 @@ def read_data():
     # Display a histogram of the diagnosis.
     normalized[1].hist(bins=2)
     plt.show()
+
+    # Trying different values of k. Chart shows that the lowest means error are when k = 13 to 15
+    error = []
+    for k in range(1, 40):
+        # Configure the KNN model using a k value of 1 to 40
+        knn_model = KNeighborsClassifier(n_neighbors=k)
+        # Fit the training data to the model
+        knn_model.fit(X_train, y_train.values.ravel())
+        # Using the test data, use the model to make the predictions
+        y_prediction = knn_model.predict(X_test)
+        error.append(np.mean(y_prediction != y_test.values.ravel()))
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o', markerfacecolor='blue', markersize=10)
+    plt.title('Error rate K value')
+    plt.xlabel('K Value')
+    plt.ylabel('Mean Error')
+    plt.show()
+
 
 
 def normalize(df):
