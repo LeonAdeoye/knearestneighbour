@@ -19,6 +19,8 @@ def read_data():
     print(f"X:\n {X}")
     print(f"y:\n {y}")
 
+    print(f"Correlation of diagnosis:\n {normalized.corr()}")
+
     # group by diagnosis - this returns groupby object.
     diagnosis_groupby = normalized.groupby(by=[1])
     print(f"Count of diagnosis:\n {diagnosis_groupby.size()}")
@@ -38,8 +40,8 @@ def read_data():
     print(f"Shape of y_train: {y_train.shape}")
     print(f"Shape of y_test: {y_test.shape}")
 
-    knn_model = KNeighborsClassifier(n_neighbors=5)
-    knn_model.fit(X_train, y_train)
+    knn_model = KNeighborsClassifier(n_neighbors=23)
+    knn_model.fit(X_train, y_train.values.ravel())
     y_prediction = knn_model.predict(X_test)
     print(f"Prediction: {y_prediction}")
     print("Accuracy: ", metrics.accuracy_score(y_test, y_prediction))
