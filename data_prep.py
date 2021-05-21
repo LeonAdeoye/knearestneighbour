@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
-from sklearn.metrics import mean_squared_error
-from math import sqrt
 
 
 def read_data():
@@ -59,7 +57,7 @@ def read_data():
     print(f"Prediction: {y_prediction}")
     print(f"Convert dataframe of one column to array of items: {y_test.values.ravel()}")
     # Calculate the accuracy of the data by comparing the known
-    # result of the test data with the predicted results of the test data
+    # Accuracy of 96% when comparing the results of known test data with the predicted results of the test data
     print("Accuracy: ", metrics.accuracy_score(y_test, y_prediction))
 
     # Display a cross tabulation of the data
@@ -70,7 +68,7 @@ def read_data():
     normalized[1].hist(bins=2)
     plt.show()
 
-    # Trying different values of k. Chart shows that the lowest means error are when k = 13 to 15
+    # Trying different values of k and calculating mean error into an array
     error = []
     for k in range(1, 40):
         # Configure the KNN model using a k value of 1 to 40
@@ -81,13 +79,13 @@ def read_data():
         y_prediction = knn_model.predict(X_test)
         error.append(np.mean(y_prediction != y_test.values.ravel()))
 
+    # Chart shows that the lowest means error are when k = 13 to 15
     plt.figure(figsize=(12, 6))
     plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o', markerfacecolor='blue', markersize=10)
     plt.title('Error rate K value')
     plt.xlabel('K Value')
     plt.ylabel('Mean Error')
     plt.show()
-
 
 
 def normalize(df):
